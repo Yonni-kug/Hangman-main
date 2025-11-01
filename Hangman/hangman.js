@@ -2,6 +2,7 @@ var POSSIBLE_WRDS = ["hams", "gold", "kug", "epoch", "moon", "harbor"];
 var word = "";
 var guesses = "";
 const MAX_GUESSES = 6;
+const NO_GUESSES = 0;
 var guess_count = MAX_GUESSES;
 var statsString = "";
 
@@ -23,11 +24,16 @@ function guessLetter(){
     var input = document.getElementById("guess");
     var letter = input.value;
     if(word.indexOf(letter) < 0) {
+        statsString = "Wrong letter!";
         console.log(`Error!`);
         guess_count--;
     }
 
-    if(letter === guesses){
+    if(word.indexOf(letter) === 0){
+        statsString = "Correct Letter!";
+    }
+    
+    if(letter === word.charAt(word.length) && (word.indexOf(letter) === 0)){
         guesses = "";
         console.log(`You've already put that letter.`);
         statsString = "Try another letter, that one has already been used.";
@@ -38,15 +44,14 @@ function guessLetter(){
     }
 
     if(guess_count === 0){
-
-    statsString = "You lost! Try again.";
-
+        guesses = "";
+        guess_count = NO_GUESSES;
+        statsString = "You lost! Try again.";
     }
-
+    console.log(`Show me the letter guessed!: ${letter}`);
     guesses += letter;
     updatePage();
     input.value = "";
-    console.log(`Show me the letter guessed!: ${letter}`);
     console.log(`Guesses Left: ${guess_count}`);
 
 
@@ -73,7 +78,7 @@ var guessArea = document.getElementById("guesses");
     guessArea.innerHTML = "Guessed Letters: " + guesses;
     
 var image = document.getElementById("HangmanImage");
-    image.src = "images/hangman" + guess_count + ".gif";
+    image.src = "images/images/hangman" + guess_count + ".gif";
     console.log(`hangman image currently: ${image}`);
     console.log(`progress update: ${statsString}`)
 
