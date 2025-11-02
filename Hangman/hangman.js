@@ -5,10 +5,8 @@ const MAX_GUESSES = 6;
 const NO_GUESSES = 0;
 var guess_count = MAX_GUESSES;
 var statsString = "";
-
-
-
-
+var endGame = true;
+var isWrongLetter = false;
 
 function newGame(){
     var randomIndex = parseInt(Math.random() * POSSIBLE_WRDS.length);
@@ -16,6 +14,7 @@ function newGame(){
     guesses = "";
     guess_count = MAX_GUESSES;
     statsString = " ";
+    endGame = false
     updatePage();
     console.log(`Send me the word to guess: ${word}`);
 }
@@ -23,24 +22,31 @@ function newGame(){
 function guessLetter(){
     var input = document.getElementById("guess");
     var letter = input.value;
-    if(word.indexOf(letter) < 0) {
+    if(endGame == true){
+        statsString = "Press New Game to start, silly!";
+    }
+
+    else if((word !== "") && (guesses.indexOf(letter) < 0) && (guess_count > 0) && (endGame == false)){
+        isWrongLetter = false;
+        guesses += letter;
+        console.log(`letter checked: ${letter}`)
+        statsString = "Correct Letter!";
+    }
+    
+    else if((word !== "") && (guesses.indexOf(letter) >= 0) && (guess_count > 0) && (endGame == false)){
+        statsString = "You already guessed this letter.";
+    }
+
+
+    if((word.indexOf(letter) < 0) && (guess_count > 0) && (endGame == false) && (word !== "")) {
+        isWrongLetter = true;
         statsString = "Wrong letter!";
         console.log(`Error!`);
         guess_count--;
     }
 
-    if(word.indexOf(letter) === 0){
-        statsString = "Correct Letter!";
-    }
-    
-    if(letter === word.charAt(word.length) && (word.indexOf(letter) === 0)){
-        guesses = "";
-        console.log(`You've already put that letter.`);
-        statsString = "Try another letter, that one has already been used.";
-    }
-
-    if((guess_count !== 0) && (guesses === word.indexOf(letter))){
-        statsString = "You won! Play again?";
+    else if((word.indexOf(letter) < 0) && (guess_count > 0) && (endGame == false) && (word !== "") && (guesses.indexOf(letter) >= 0) && (isWrongLetter == true)){
+        statsString = "You already guessed this letter. IT'S ALSO WRONG ! ! !";
     }
 
     if(guess_count === 0){
@@ -48,8 +54,8 @@ function guessLetter(){
         guess_count = NO_GUESSES;
         statsString = "You lost! Try again.";
     }
+    
     console.log(`Show me the letter guessed!: ${letter}`);
-    guesses += letter;
     updatePage();
     input.value = "";
     console.log(`Guesses Left: ${guess_count}`);
@@ -69,6 +75,11 @@ function updatePage(){
         else {
             clueString += "_ ";
         }
+    }
+
+    if((clueString.indexOf("_") < 0) && (word !== "")){
+        endGame = true;
+        statsString = "You won! Play again?";
     }
 
 var clue = document.getElementById("clue");
