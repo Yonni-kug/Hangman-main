@@ -52,7 +52,7 @@ function guessLetter(){
     if(guess_count === 0){
         guesses = "";
         guess_count = NO_GUESSES;
-        statsString = "You lost! Try again.";
+        statsString = "You lost! The correct word was: " + word + ". Try again?";
     }
     
     console.log(`Show me the letter guessed!: ${letter}`);
